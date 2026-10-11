@@ -125,6 +125,8 @@ function mergePreviousData(cards, previousCards) {
       mercariAverage: previous?.mercariAverage || null,
       mercariSampleCount: previous?.mercariSampleCount || 0,
       mercariUpdatedAt: previous?.mercariUpdatedAt || '',
+      mercariLatestPrice: previous?.mercariLatestPrice || null,
+      mercariLatestAt: previous?.mercariLatestAt || '',
     };
   });
 }
@@ -143,6 +145,18 @@ function calculateMercariAverage(sales) {
   return {
     average: Math.round(filtered.reduce((total, price) => total + price, 0) / filtered.length / 10) * 10,
     sampleCount: filtered.length,
+  };
+}
+
+function calculateMercariMarket(sales) {
+  const valid = sales.filter(sale => sale && Number.isFinite(Number(sale.price)) && Number(sale.price) > 0);
+  if (!valid.length) return null;
+  const average = calculateMercariAverage(valid);
+  return {
+    latestPrice: Number(valid[0].price),
+    latestAt: valid[0].soldAt || '',
+    average: average?.average || null,
+    sampleCount: average?.sampleCount || valid.length,
   };
 }
 
@@ -186,5 +200,5 @@ async function main() {
   console.log(`Updated ${cards.length} Palworld cards for ${TODAY_JST}`);
 }
 
-module.exports = { parsePriceGuide, mergePreviousData, calculateMercariAverage, replaceCatalog };
+module.exports = { parsePriceGuide, mergePreviousData, calculateMercariAverage, calculateMercariMarket, replaceCatalog };
 if (require.main === module) main().catch(error => { console.error(error); process.exit(1); });

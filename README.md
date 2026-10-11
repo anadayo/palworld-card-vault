@@ -30,10 +30,11 @@ to the 80 cards with the strongest available TCGplayer market values by default
 (`US_CARD_LIMIT` can override this in Actions).
 
 The US market shows TCGplayer's USD market value. The Japan market displays a
-Mercari sold-listing average only when at least three same-card sales are
-available. The average excludes values below 40% or above 250% of the median.
-Cards without enough verified samples display `集計データ不足` and retain links
-to the live Mercari on-sale and sold searches with the Ambassador ID.
+Mercari sold-listing average when at least three same-card sales are available.
+With one or two verified sales, it falls back to the latest sold price. The
+average excludes values below 40% or above 250% of the median. Cards with no
+verified sales display `売却実績なし` and retain links to live Mercari on-sale
+and sold searches with the Ambassador ID.
 
 ## Asset policy
 
