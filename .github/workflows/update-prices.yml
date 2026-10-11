@@ -1,0 +1,39 @@
+name: Update Palworld card prices
+
+on:
+  schedule:
+    # 10:20, 15:20, 18:20, 21:20 JST every day
+    - cron: '20 1,6,9,12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: palworld-price-update
+  cancel-in-progress: false
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Test updater
+        run: node scripts/test-update-prices.js
+
+      - name: Update all card prices
+        run: node scripts/update-prices.js
+
+      - name: Commit updated catalog
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update Palworld card prices'
+          file_pattern: index.html cards.json price-update-report.json
