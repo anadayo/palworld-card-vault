@@ -1,0 +1,32 @@
+name: Save Palworld daily analytics to Notion
+
+on:
+  schedule:
+    - cron: '25 0 * * *'
+  workflow_dispatch:
+    inputs:
+      report_date:
+        description: '保存する日付（YYYY-MM-DD、空欄は前日）'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  save-daily-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Save GA4 and market history to Notion
+        env:
+          GA_PROPERTY_ID: '552987217'
+          GA_SERVICE_ACCOUNT_JSON: ${{ secrets.GA_SERVICE_ACCOUNT_JSON }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PALWORLD_DATA_SOURCE_ID: '5dfea9e5-6274-4944-a330-2cc1bbf0dccf'
+          REPORT_DATE: ${{ inputs.report_date }}
+        run: node scripts/sync-daily-analytics-to-notion.js

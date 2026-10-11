@@ -1,5 +1,15 @@
 # PALWORLD CARD VAULT
 
+日本版・アメリカ版を切り替えて相場を確認できる、非公式のカード価格・収集管理サイトです。
+
+## 運用
+
+- 日本版相場: 1日3回更新
+- アメリカ版相場: 1日2回更新
+- アクセス・クリック履歴: 毎朝Notionへ保存
+
+Notion連携の設定は `NOTION_ANALYTICS_SETUP.md` を参照してください。
+
 Unofficial, non-commercial information hub for Palworld OFFICIAL CARD GAME.
 
 ## Local preview
