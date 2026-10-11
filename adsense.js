@@ -1,6 +1,6 @@
 (() => {
   const config = Object.freeze({
-    client: "",
+    client: "ca-pub-6265700167821181",
     slots: { home: "" },
   });
   const preview = ["localhost", "127.0.0.1"].includes(location.hostname)
