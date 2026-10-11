@@ -13,12 +13,15 @@ Open `http://localhost:3344/palworld-card-vault/` from the parent workspace.
 ## Price updates
 
 `scripts/update-prices.js` imports all five Palworld sets listed by TCGplayer,
-updates `cards.json`, embeds the catalog into `index.html`, and writes an audit
-report to `price-update-report.json`.
+then merges the official Japanese card list by Japanese card number. Japanese
+names and Japanese card images are never substituted with English assets. The
+script updates `cards.json`, embeds the catalog into `index.html`, and writes an
+audit report to `price-update-report.json`.
 
 The GitHub Actions workflow runs at 10:20, 15:20, 18:20, and 21:20 JST. It has
-a safety threshold of 200 cards: a partial or blocked response cannot overwrite
-the published catalog. Run the parser tests locally with:
+safety thresholds of 200 US records and 200 Japanese records: a partial or
+blocked response cannot overwrite the published catalog. Run the parser tests
+locally with:
 
 ```sh
 node scripts/test-update-prices.js

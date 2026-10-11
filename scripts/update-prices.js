@@ -8,6 +8,8 @@ const REPORT_FILE = path.join(ROOT, 'price-update-report.json');
 const MINIMUM_CARD_COUNT = Number(process.env.MINIMUM_CARD_COUNT || 200);
 const REQUEST_DELAY_MS = Number(process.env.REQUEST_DELAY_MS || 1200);
 const US_CARD_LIMIT = Number(process.env.US_CARD_LIMIT || 80);
+const MINIMUM_JAPAN_CARD_COUNT = Number(process.env.MINIMUM_JAPAN_CARD_COUNT || 200);
+const JAPAN_CARD_LIST_URL = 'https://palworld-official-cardgame.com/cardlist/searchresults';
 const USER_AGENT = 'Mozilla/5.0 (compatible; PalworldCardVaultPriceUpdater/1.0; +https://github.com/anadayo/palworld-card-vault)';
 const TODAY_JST = new Intl.DateTimeFormat('sv-SE', {
   timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
@@ -75,6 +77,7 @@ function parsePriceGuide(html, set) {
     cards.push({
       id: `${cardNo}-${productId}`,
       cardNo,
+      jpCardNo: cardNo.replace(/^EBP/i, 'BP').replace(/^ETD/i, 'TD').replace(/^ESS/i, 'SS'),
       productId,
       name,
       nameJa: '',
@@ -89,6 +92,30 @@ function parsePriceGuide(html, set) {
   }
 
   return [...new Map(cards.map(card => [card.productId, card])).values()];
+}
+
+function absoluteUrl(value, base) {
+  try { return new URL(decodeHtml(value), base).toString(); } catch { return ''; }
+}
+
+function parseJapaneseCardList(html) {
+  const links = [...html.matchAll(/<a\b[^>]*href=["'][^"']*\/cardlist\/detail\?id=[^"']+["'][^>]*>([\s\S]*?)<\/a>/gi)];
+  const cards = [];
+  for (const link of links) {
+    const body = link[1];
+    const text = textOnly(body);
+    const jpCardNo = text.match(/\b(?:BP|TD|SS|PR)\d{2}-\d{3}(?:[A-Z]{1,4})?\b/i)?.[0]?.toUpperCase();
+    if (!jpCardNo) continue;
+    const imageMatch = body.match(/<img\b[^>]*(?:src|data-src)=["']([^"']+)["'][^>]*>/i);
+    const altMatch = body.match(/<img\b[^>]*alt=["']([^"']+)["'][^>]*>/i);
+    const rarity = text.match(/\b(SSS|SSP|OSR|TSP|TSR|SP|SR|RR|TD|PR|R|U|C)\b/)?.[1] || '';
+    const withoutNumber = text.replace(jpCardNo, ' ').replace(new RegExp(`\\b${rarity}\\b`), ' ').replace(/MORE|詳しく見る/g, ' ').replace(/\s+/g, ' ').trim();
+    const nameJa = decodeHtml(altMatch?.[1] || withoutNumber).trim();
+    const imageJa = absoluteUrl(imageMatch?.[1] || '', JAPAN_CARD_LIST_URL);
+    if (!nameJa || !imageJa) continue;
+    cards.push({ jpCardNo, nameJa, imageJa, sub: rarity });
+  }
+  return [...new Map(cards.map(card => [card.jpCardNo, card])).values()];
 }
 
 async function fetchHtml(url, label) {
@@ -120,6 +147,8 @@ function mergePreviousData(cards, previousCards) {
     return {
       ...card,
       nameJa: previous?.nameJa || '',
+      jpCardNo: previous?.jpCardNo || card.jpCardNo,
+      imageJa: previous?.imageJa || '',
       color: previous?.color || card.color,
       dot: previous?.dot || card.dot,
       mercariAverage: previous?.mercariAverage || null,
@@ -129,6 +158,36 @@ function mergePreviousData(cards, previousCards) {
       mercariLatestAt: previous?.mercariLatestAt || '',
     };
   });
+}
+
+function mergeJapaneseCatalog(cards, japaneseCards) {
+  const byNumber = new Map(japaneseCards.map(card => [card.jpCardNo, card]));
+  const merged = cards.map(card => {
+    const japanese = byNumber.get(card.jpCardNo);
+    if (!japanese) return card;
+    return { ...card, ...japanese, jpEnabled: true };
+  });
+  const known = new Set(merged.map(card => card.jpCardNo));
+  for (const japanese of japaneseCards) {
+    if (known.has(japanese.jpCardNo)) continue;
+    merged.push({
+      id: `JP-${japanese.jpCardNo}`,
+      cardNo: japanese.jpCardNo,
+      name: '',
+      set: 'Japanese catalog',
+      setCode: japanese.jpCardNo.split('-')[0],
+      color: 'Neutral',
+      dot: '#8c9aa0',
+      marketPrice: null,
+      image: '',
+      tcgUrl: '',
+      productId: '',
+      jpEnabled: true,
+      usEnabled: false,
+      ...japanese,
+    });
+  }
+  return merged;
 }
 
 function calculateMercariAverage(sales) {
@@ -187,18 +246,25 @@ async function main() {
     throw new Error(`Safety stop: parsed ${uniqueCards.length} cards; expected at least ${MINIMUM_CARD_COUNT}`);
   }
 
+  const japanHtml = await fetchHtml(JAPAN_CARD_LIST_URL, 'Japanese official card list');
+  const japaneseCards = parseJapaneseCardList(japanHtml);
+  if (japaneseCards.length < MINIMUM_JAPAN_CARD_COUNT) {
+    throw new Error(`Safety stop: parsed ${japaneseCards.length} Japanese cards; expected at least ${MINIMUM_JAPAN_CARD_COUNT}`);
+  }
+
   const usProducts = new Set([...uniqueCards]
     .sort((a, b) => b.marketPrice - a.marketPrice)
     .slice(0, US_CARD_LIMIT)
     .map(card => card.productId));
-  const cards = mergePreviousData(uniqueCards, previousCards)
+  const cards = mergeJapaneseCatalog(mergePreviousData(uniqueCards, previousCards)
     .map(card => ({ ...card, jpEnabled: true, usEnabled: usProducts.has(card.productId) }))
+  , japaneseCards)
     .sort((a, b) => a.setCode.localeCompare(b.setCode) || a.cardNo.localeCompare(b.cardNo) || b.marketPrice - a.marketPrice);
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
   fs.writeFileSync(INDEX_FILE, replaceCatalog(indexHtml, cards));
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, total: cards.length, japanCards: cards.filter(card => card.jpEnabled).length, usCards: cards.filter(card => card.usEnabled).length, sets: setReport }, null, 2)}\n`);
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, total: cards.length, japanCards: cards.filter(card => card.jpEnabled).length, japaneseImages: cards.filter(card => card.imageJa).length, usCards: cards.filter(card => card.usEnabled).length, sets: setReport }, null, 2)}\n`);
   console.log(`Updated ${cards.length} Palworld cards for ${TODAY_JST}`);
 }
 
-module.exports = { parsePriceGuide, mergePreviousData, calculateMercariAverage, calculateMercariMarket, replaceCatalog };
+module.exports = { parsePriceGuide, parseJapaneseCardList, mergePreviousData, mergeJapaneseCatalog, calculateMercariAverage, calculateMercariMarket, replaceCatalog };
 if (require.main === module) main().catch(error => { console.error(error); process.exit(1); });

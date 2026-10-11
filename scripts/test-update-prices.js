@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { parsePriceGuide, mergePreviousData, calculateMercariAverage, calculateMercariMarket, replaceCatalog } = require('./update-prices');
+const { parsePriceGuide, parseJapaneseCardList, mergePreviousData, mergeJapaneseCatalog, calculateMercariAverage, calculateMercariMarket, replaceCatalog } = require('./update-prices');
 
 const fixture = `
 <table><tbody><tr>
@@ -14,9 +14,19 @@ assert.equal(cards[0].cardNo, 'EBP01-018');
 assert.equal(cards[0].marketPrice, 0.12);
 assert.equal(cards[0].productId, '713906');
 
+const japaneseFixture = `<a href="/cardlist/detail?id=25"><img src="/images/cards/BP01-025OSR.png" alt="竜を呼ぶ声 - オコチョ"><span>BP01-025OSR</span><span>OSR</span></a>`;
+const japaneseCards = parseJapaneseCardList(japaneseFixture);
+assert.equal(japaneseCards.length, 1);
+assert.equal(japaneseCards[0].jpCardNo, 'BP01-025OSR');
+assert.equal(japaneseCards[0].nameJa, '竜を呼ぶ声 - オコチョ');
+assert.match(japaneseCards[0].imageJa, /^https:\/\/palworld-official-cardgame\.com\/images\/cards\//);
+
 const merged = mergePreviousData(cards, [{ productId: '713906', nameJa: '警報ベル', color: 'Red', dot: '#f00' }]);
 assert.equal(merged[0].nameJa, '警報ベル');
 assert.equal(merged[0].color, 'Red');
+const localized = mergeJapaneseCatalog([{ ...cards[0], jpCardNo: 'BP01-025OSR' }], japaneseCards);
+assert.equal(localized[0].nameJa, '竜を呼ぶ声 - オコチョ');
+assert.ok(localized[0].imageJa);
 
 const market = calculateMercariAverage([
   { price: 1000 }, { price: 1100 }, { price: 1200 }, { price: 15000 },
