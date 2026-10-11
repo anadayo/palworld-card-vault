@@ -7,6 +7,7 @@ const CATALOG_FILE = path.join(ROOT, 'cards.json');
 const REPORT_FILE = path.join(ROOT, 'price-update-report.json');
 const MINIMUM_CARD_COUNT = Number(process.env.MINIMUM_CARD_COUNT || 200);
 const REQUEST_DELAY_MS = Number(process.env.REQUEST_DELAY_MS || 1200);
+const US_CARD_LIMIT = Number(process.env.US_CARD_LIMIT || 80);
 const USER_AGENT = 'Mozilla/5.0 (compatible; PalworldCardVaultPriceUpdater/1.0; +https://github.com/anadayo/palworld-card-vault)';
 const TODAY_JST = new Intl.DateTimeFormat('sv-SE', {
   timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
@@ -172,11 +173,16 @@ async function main() {
     throw new Error(`Safety stop: parsed ${uniqueCards.length} cards; expected at least ${MINIMUM_CARD_COUNT}`);
   }
 
+  const usProducts = new Set([...uniqueCards]
+    .sort((a, b) => b.marketPrice - a.marketPrice)
+    .slice(0, US_CARD_LIMIT)
+    .map(card => card.productId));
   const cards = mergePreviousData(uniqueCards, previousCards)
+    .map(card => ({ ...card, jpEnabled: true, usEnabled: usProducts.has(card.productId) }))
     .sort((a, b) => a.setCode.localeCompare(b.setCode) || a.cardNo.localeCompare(b.cardNo) || b.marketPrice - a.marketPrice);
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
   fs.writeFileSync(INDEX_FILE, replaceCatalog(indexHtml, cards));
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, total: cards.length, sets: setReport }, null, 2)}\n`);
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, total: cards.length, japanCards: cards.filter(card => card.jpEnabled).length, usCards: cards.filter(card => card.usEnabled).length, sets: setReport }, null, 2)}\n`);
   console.log(`Updated ${cards.length} Palworld cards for ${TODAY_JST}`);
 }
 

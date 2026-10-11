@@ -24,6 +24,11 @@ the published catalog. Run the parser tests locally with:
 node scripts/test-update-prices.js
 ```
 
+The two market tabs intentionally use independent catalog sizes. Japan is the
+primary catalog and keeps every imported card candidate. The US tab is limited
+to the 80 cards with the strongest available TCGplayer market values by default
+(`US_CARD_LIMIT` can override this in Actions).
+
 The US market shows TCGplayer's USD market value. The Japan market displays a
 Mercari sold-listing average only when at least three same-card sales are
 available. The average excludes values below 40% or above 250% of the median.
