@@ -121,8 +121,28 @@ function mergePreviousData(cards, previousCards) {
       nameJa: previous?.nameJa || '',
       color: previous?.color || card.color,
       dot: previous?.dot || card.dot,
+      mercariAverage: previous?.mercariAverage || null,
+      mercariSampleCount: previous?.mercariSampleCount || 0,
+      mercariUpdatedAt: previous?.mercariUpdatedAt || '',
     };
   });
+}
+
+function calculateMercariAverage(sales) {
+  const recent = sales
+    .filter(sale => sale && Number.isFinite(Number(sale.price)) && Number(sale.price) > 0)
+    .slice(0, 20)
+    .map(sale => Number(sale.price))
+    .sort((a, b) => a - b);
+  if (recent.length < 3) return null;
+  const middle = Math.floor(recent.length / 2);
+  const median = recent.length % 2 ? recent[middle] : (recent[middle - 1] + recent[middle]) / 2;
+  const filtered = recent.filter(price => price >= median * 0.4 && price <= median * 2.5);
+  if (filtered.length < 3) return null;
+  return {
+    average: Math.round(filtered.reduce((total, price) => total + price, 0) / filtered.length / 10) * 10,
+    sampleCount: filtered.length,
+  };
 }
 
 function replaceCatalog(indexHtml, cards) {
@@ -160,5 +180,5 @@ async function main() {
   console.log(`Updated ${cards.length} Palworld cards for ${TODAY_JST}`);
 }
 
-module.exports = { parsePriceGuide, mergePreviousData, replaceCatalog };
+module.exports = { parsePriceGuide, mergePreviousData, calculateMercariAverage, replaceCatalog };
 if (require.main === module) main().catch(error => { console.error(error); process.exit(1); });

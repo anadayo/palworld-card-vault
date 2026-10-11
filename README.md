@@ -24,9 +24,11 @@ the published catalog. Run the parser tests locally with:
 node scripts/test-update-prices.js
 ```
 
-The US market shows TCGplayer's USD market value. The Japan market links to live
-Mercari on-sale and sold searches with the configured Ambassador ID; it does not
-claim a locally aggregated JPY value.
+The US market shows TCGplayer's USD market value. The Japan market displays a
+Mercari sold-listing average only when at least three same-card sales are
+available. The average excludes values below 40% or above 250% of the median.
+Cards without enough verified samples display `集計データ不足` and retain links
+to the live Mercari on-sale and sold searches with the Ambassador ID.
 
 ## Asset policy
 

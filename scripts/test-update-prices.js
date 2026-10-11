@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { parsePriceGuide, mergePreviousData, replaceCatalog } = require('./update-prices');
+const { parsePriceGuide, mergePreviousData, calculateMercariAverage, replaceCatalog } = require('./update-prices');
 
 const fixture = `
 <table><tbody><tr>
@@ -17,6 +17,12 @@ assert.equal(cards[0].productId, '713906');
 const merged = mergePreviousData(cards, [{ productId: '713906', nameJa: '警報ベル', color: 'Red', dot: '#f00' }]);
 assert.equal(merged[0].nameJa, '警報ベル');
 assert.equal(merged[0].color, 'Red');
+
+const market = calculateMercariAverage([
+  { price: 1000 }, { price: 1100 }, { price: 1200 }, { price: 15000 },
+]);
+assert.deepEqual(market, { average: 1100, sampleCount: 3 });
+assert.equal(calculateMercariAverage([{ price: 1000 }, { price: 1100 }]), null);
 
 const source = "const PRICE_DATA_META={updatedAt:'old',source:'TCGplayer'};\nconst cards=[\n];";
 const replaced = replaceCatalog(source, cards);
