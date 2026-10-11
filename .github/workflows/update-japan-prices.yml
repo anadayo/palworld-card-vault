@@ -1,0 +1,31 @@
+name: Update Japan Palworld prices
+
+on:
+  schedule:
+    - cron: '0 2,7,12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: palworld-japan-price-update
+  cancel-in-progress: false
+
+jobs:
+  update-japan-prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Test Japan updater
+        run: node scripts/test-update-japan-prices.js
+      - name: Update Japanese catalog and Mercari averages
+        run: node scripts/update-japan-prices.js
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update Japan Palworld prices'
+          file_pattern: cards-jp.json market-meta.json japan-price-state.json price-update-report-jp.json

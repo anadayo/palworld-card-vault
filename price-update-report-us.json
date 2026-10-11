@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-11",
+  "parsed": 262,
+  "published": 80,
+  "sets": [
+    {
+      "set": "BP01",
+      "cards": 161,
+      "groupId": 24842
+    },
+    {
+      "set": "TD01",
+      "cards": 39,
+      "groupId": 24843
+    },
+    {
+      "set": "TD02",
+      "cards": 38,
+      "groupId": 24844
+    },
+    {
+      "set": "BP02",
+      "cards": 0,
+      "groupId": 24850
+    },
+    {
+      "set": "PROMO",
+      "cards": 24,
+      "groupId": 24851
+    },
+    {
+      "set": "TD03",
+      "cards": 0,
+      "groupId": 24852
+    },
+    {
+      "set": "TD04",
+      "cards": 0,
+      "groupId": 24853
+    },
+    {
+      "set": "PROTOTYPE",
+      "cards": 0,
+      "groupId": 24876
+    }
+  ]
+}

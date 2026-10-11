@@ -1,0 +1,13 @@
+{
+  "jp": {
+    "updatedAt": "2026-10-11",
+    "source": "Mercari sold listings / Japanese official catalog",
+    "cardCount": 287,
+    "checkedThisRun": 1
+  },
+  "us": {
+    "updatedAt": "2026-10-11",
+    "source": "TCGCSV / TCGplayer daily market data",
+    "cardCount": 80
+  }
+}

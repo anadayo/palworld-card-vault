@@ -2,30 +2,28 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const INDEX_FILE = path.join(ROOT, 'index.html');
-const CATALOG_FILE = path.join(ROOT, 'cards.json');
-const REPORT_FILE = path.join(ROOT, 'price-update-report.json');
+const CATALOG_FILE = path.join(ROOT, 'cards-us.json');
+const META_FILE = path.join(ROOT, 'market-meta.json');
+const REPORT_FILE = path.join(ROOT, 'price-update-report-us.json');
 const MINIMUM_CARD_COUNT = Number(process.env.MINIMUM_CARD_COUNT || 200);
-const REQUEST_DELAY_MS = Number(process.env.REQUEST_DELAY_MS || 1200);
+const REQUEST_DELAY_MS = Number(process.env.REQUEST_DELAY_MS || 350);
 const US_CARD_LIMIT = Number(process.env.US_CARD_LIMIT || 80);
-const MINIMUM_JAPAN_CARD_COUNT = Number(process.env.MINIMUM_JAPAN_CARD_COUNT || 200);
-const JAPAN_CARD_LIST_URL = 'https://palworld-official-cardgame.com/cardlist/searchresults';
-const USER_AGENT = 'Mozilla/5.0 (compatible; PalworldCardVaultPriceUpdater/1.0; +https://github.com/anadayo/palworld-card-vault)';
+const USER_AGENT = 'Mozilla/5.0 (compatible; PalworldCardVaultPriceUpdater/2.0; +https://github.com/anadayo/palworld-card-vault)';
 const TODAY_JST = new Intl.DateTimeFormat('sv-SE', {
   timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
 }).format(new Date());
 
-const SETS = [
-  ['BP01', 'Dawn of Palpagos', 'bp01-dawn-of-palpagos'],
-  ['TD01', 'Dawn of Palpagos Red/Blue', 'td01-dawn-of-palpagos-red%E2%80%A2blue'],
-  ['TD02', 'Dawn of Palpagos Green/Purple', 'td02-dawn-of-palpagos-green%E2%80%A2purple'],
-  ['PROMO', 'Promo Cards', 'palworld-promo-cards'],
-  ['PROTOTYPE', 'Prototype Cards', 'palworld-prototype-cards'],
-].map(([code, name, slug]) => ({
-  code,
-  name,
-  url: `https://www.tcgplayer.com/categories/trading-and-collectible-card-games/palworld-official-card-game/price-guides/${slug}`,
-}));
+const TCGCSV_CATEGORY_ID = 91;
+const GROUPS = [
+  [24842, 'BP01', 'Dawn of Palpagos'],
+  [24843, 'TD01', 'Dawn of Palpagos Red/Blue'],
+  [24844, 'TD02', 'Dawn of Palpagos Green/Purple'],
+  [24850, 'BP02', 'Legends Awaken'],
+  [24851, 'PROMO', 'Palworld Promo Cards'],
+  [24852, 'TD03', 'Eternal Ascent Red/Green'],
+  [24853, 'TD04', 'Eternal Ascent Blue/Purple'],
+  [24876, 'PROTOTYPE', 'Palworld Prototype Cards'],
+].map(([id, code, name]) => ({ id, code, name }));
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -53,69 +51,36 @@ function inferColor(text) {
 function parsePriceGuide(html, set) {
   const rows = html.match(/<tr\b[\s\S]*?<\/tr>/gi) || [];
   const cards = [];
-
   for (const row of rows) {
     const productMatch = row.match(/(?:https?:\/\/www\.tcgplayer\.com)?\/product\/(\d+)(?:\/[^"'?<]*)?/i);
     if (!productMatch) continue;
-
     const productId = productMatch[1];
     const cells = [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map(match => textOnly(match[1]));
     const rowText = textOnly(row);
     const cardNo = rowText.match(/\b[A-Z]{1,8}\d{0,3}-[A-Z0-9]{1,10}(?:-[A-Z0-9]+)?\b/i)?.[0]?.toUpperCase();
     const prices = [...rowText.matchAll(/\$\s*([0-9]+(?:\.[0-9]{1,2})?)/g)].map(match => Number(match[1]));
     if (!cardNo || !prices.length) continue;
-
     const productLinks = [...row.matchAll(/<a\b[^>]*href=["'][^"']*\/product\/\d+[^"']*["'][^>]*>([\s\S]*?)<\/a>/gi)]
-      .map(match => textOnly(match[1]))
-      .filter(Boolean);
+      .map(match => textOnly(match[1])).filter(Boolean);
     const imageAlt = row.match(/<img\b[^>]*alt=["']([^"']+)["']/i)?.[1];
     const name = productLinks.sort((a, b) => b.length - a.length)[0] || decodeHtml(imageAlt || '') || cardNo;
     const numberCell = cells.findIndex(cell => cell.includes(cardNo));
     const sub = numberCell > 0 ? cells[numberCell - 1] : (cells.find(cell => /^(SP|OSR|RR|R|U|C|Promo|Common|Rare)/i.test(cell)) || 'Card');
-    const colorInfo = inferColor(rowText);
-
     cards.push({
       id: `${cardNo}-${productId}`,
       cardNo,
-      jpCardNo: cardNo.replace(/^EBP/i, 'BP').replace(/^ETD/i, 'TD').replace(/^ESS/i, 'SS'),
       productId,
       name,
-      nameJa: '',
       set: set.name,
       setCode: set.code,
       sub,
-      ...colorInfo,
+      ...inferColor(rowText),
       marketPrice: prices[0],
       image: `https://tcgplayer-cdn.tcgplayer.com/product/${productId}_in_1000x1000.jpg`,
       tcgUrl: `https://www.tcgplayer.com/product/${productId}/`,
     });
   }
-
   return [...new Map(cards.map(card => [card.productId, card])).values()];
-}
-
-function absoluteUrl(value, base) {
-  try { return new URL(decodeHtml(value), base).toString(); } catch { return ''; }
-}
-
-function parseJapaneseCardList(html) {
-  const links = [...html.matchAll(/<a\b[^>]*href=["'][^"']*\/cardlist\/detail\?id=[^"']+["'][^>]*>([\s\S]*?)<\/a>/gi)];
-  const cards = [];
-  for (const link of links) {
-    const body = link[1];
-    const text = textOnly(body);
-    const jpCardNo = text.match(/\b(?:BP|TD|SS|PR)\d{2}-\d{3}(?:[A-Z]{1,4})?\b/i)?.[0]?.toUpperCase();
-    if (!jpCardNo) continue;
-    const imageMatch = body.match(/<img\b[^>]*(?:src|data-src)=["']([^"']+)["'][^>]*>/i);
-    const altMatch = body.match(/<img\b[^>]*alt=["']([^"']+)["'][^>]*>/i);
-    const rarity = text.match(/\b(SSS|SSP|OSR|TSP|TSR|SP|SR|RR|TD|PR|R|U|C)\b/)?.[1] || '';
-    const withoutNumber = text.replace(jpCardNo, ' ').replace(new RegExp(`\\b${rarity}\\b`), ' ').replace(/MORE|詳しく見る/g, ' ').replace(/\s+/g, ' ').trim();
-    const nameJa = decodeHtml(altMatch?.[1] || withoutNumber).trim();
-    const imageJa = absoluteUrl(imageMatch?.[1] || '', JAPAN_CARD_LIST_URL);
-    if (!nameJa || !imageJa) continue;
-    cards.push({ jpCardNo, nameJa, imageJa, sub: rarity });
-  }
-  return [...new Map(cards.map(card => [card.jpCardNo, card])).values()];
 }
 
 async function fetchHtml(url, label) {
@@ -133,138 +98,80 @@ async function fetchHtml(url, label) {
   throw new Error(`${label}: ${lastError.message}`);
 }
 
-function readPreviousCards(indexHtml) {
-  if (fs.existsSync(CATALOG_FILE)) return JSON.parse(fs.readFileSync(CATALOG_FILE, 'utf8'));
-  const match = indexHtml.match(/const cards=(\[[\s\S]*?\n\s*\]);/);
-  if (!match) return [];
-  return Function(`return ${match[1]}`)();
+async function fetchJson(url, label) {
+  const response = await fetch(url, { headers: { 'user-agent': USER_AGENT, accept: 'application/json' } });
+  if (!response.ok) throw new Error(`${label}: HTTP ${response.status}`);
+  const data = await response.json();
+  if (data.success === false) throw new Error(`${label}: ${JSON.stringify(data.errors || [])}`);
+  return data.results || [];
 }
 
-function mergePreviousData(cards, previousCards) {
-  const byProduct = new Map(previousCards.filter(card => card.productId).map(card => [String(card.productId), card]));
-  return cards.map(card => {
-    const previous = byProduct.get(String(card.productId));
-    return {
-      ...card,
-      nameJa: previous?.nameJa || '',
-      jpCardNo: previous?.jpCardNo || card.jpCardNo,
-      imageJa: previous?.imageJa || '',
-      color: previous?.color || card.color,
-      dot: previous?.dot || card.dot,
-      mercariAverage: previous?.mercariAverage || null,
-      mercariSampleCount: previous?.mercariSampleCount || 0,
-      mercariUpdatedAt: previous?.mercariUpdatedAt || '',
-      mercariLatestPrice: previous?.mercariLatestPrice || null,
-      mercariLatestAt: previous?.mercariLatestAt || '',
-    };
-  });
+function extendedValue(product, key) {
+  return product.extendedData?.find(item => item.name === key)?.value || '';
 }
 
-function mergeJapaneseCatalog(cards, japaneseCards) {
-  const byNumber = new Map(japaneseCards.map(card => [card.jpCardNo, card]));
-  const merged = cards.map(card => {
-    const japanese = byNumber.get(card.jpCardNo);
-    if (!japanese) return card;
-    return { ...card, ...japanese, jpEnabled: true };
-  });
-  const known = new Set(merged.map(card => card.jpCardNo));
-  for (const japanese of japaneseCards) {
-    if (known.has(japanese.jpCardNo)) continue;
-    merged.push({
-      id: `JP-${japanese.jpCardNo}`,
-      cardNo: japanese.jpCardNo,
-      name: '',
-      set: 'Japanese catalog',
-      setCode: japanese.jpCardNo.split('-')[0],
-      color: 'Neutral',
-      dot: '#8c9aa0',
-      marketPrice: null,
-      image: '',
-      tcgUrl: '',
-      productId: '',
-      jpEnabled: true,
-      usEnabled: false,
-      ...japanese,
-    });
+function parseTcgCsvGroup(products, prices, group) {
+  const pricesByProduct = new Map();
+  for (const price of prices) {
+    if (!Number.isFinite(Number(price.marketPrice)) || Number(price.marketPrice) <= 0) continue;
+    const current = pricesByProduct.get(String(price.productId));
+    if (!current || Number(price.marketPrice) > Number(current.marketPrice)) pricesByProduct.set(String(price.productId), price);
   }
-  return merged;
+  return products.map(product => {
+    const cardNo = String(extendedValue(product, 'Number')).trim().toUpperCase();
+    const price = pricesByProduct.get(String(product.productId));
+    if (!cardNo || !price) return null;
+    const colorInfo = inferColor(extendedValue(product, 'Color'));
+    return {
+      id: `${cardNo}-${product.productId}`,
+      cardNo,
+      productId: String(product.productId),
+      name: product.name,
+      set: group.name,
+      setCode: group.code,
+      sub: extendedValue(product, 'Rarity') || price.subTypeName || 'Card',
+      ...colorInfo,
+      marketPrice: Number(price.marketPrice),
+      image: `https://tcgplayer-cdn.tcgplayer.com/product/${product.productId}_in_1000x1000.jpg`,
+      tcgUrl: product.url || `https://www.tcgplayer.com/product/${product.productId}/`,
+    };
+  }).filter(Boolean);
 }
 
-function calculateMercariAverage(sales) {
-  const recent = sales
-    .filter(sale => sale && Number.isFinite(Number(sale.price)) && Number(sale.price) > 0)
-    .slice(0, 20)
-    .map(sale => Number(sale.price))
-    .sort((a, b) => a - b);
-  if (recent.length < 3) return null;
-  const middle = Math.floor(recent.length / 2);
-  const median = recent.length % 2 ? recent[middle] : (recent[middle - 1] + recent[middle]) / 2;
-  const filtered = recent.filter(price => price >= median * 0.4 && price <= median * 2.5);
-  if (filtered.length < 3) return null;
-  return {
-    average: Math.round(filtered.reduce((total, price) => total + price, 0) / filtered.length / 10) * 10,
-    sampleCount: filtered.length,
-  };
-}
-
-function calculateMercariMarket(sales) {
-  const valid = sales.filter(sale => sale && Number.isFinite(Number(sale.price)) && Number(sale.price) > 0);
-  if (!valid.length) return null;
-  const average = calculateMercariAverage(valid);
-  return {
-    latestPrice: Number(valid[0].price),
-    latestAt: valid[0].soldAt || '',
-    average: average?.average || null,
-    sampleCount: average?.sampleCount || valid.length,
-  };
-}
-
-function replaceCatalog(indexHtml, cards) {
-  const serialized = JSON.stringify(cards, null, 2).replace(/^/gm, '    ').trimStart();
-  return indexHtml
-    .replace(/const PRICE_DATA_META=\{[^;]+\};/, `const PRICE_DATA_META={updatedAt:'${TODAY_JST}',source:'TCGplayer'};`)
-    .replace(/const cards=\[[\s\S]*?\n\s*\];/, `const cards=${serialized};`);
+function updateMeta(market, value) {
+  const meta = fs.existsSync(META_FILE) ? JSON.parse(fs.readFileSync(META_FILE, 'utf8')) : {};
+  meta[market] = value;
+  fs.writeFileSync(META_FILE, `${JSON.stringify(meta, null, 2)}\n`);
 }
 
 async function main() {
-  const indexHtml = fs.readFileSync(INDEX_FILE, 'utf8');
-  const previousCards = readPreviousCards(indexHtml);
   const allCards = [];
   const setReport = [];
-
-  for (const set of SETS) {
-    const html = await fetchHtml(set.url, set.code);
-    const cards = parsePriceGuide(html, set);
+  for (const group of GROUPS) {
+    const base = `https://tcgcsv.com/tcgplayer/${TCGCSV_CATEGORY_ID}/${group.id}`;
+    const [products, prices] = await Promise.all([
+      fetchJson(`${base}/products`, `${group.code} products`),
+      fetchJson(`${base}/prices`, `${group.code} prices`),
+    ]);
+    const cards = parseTcgCsvGroup(products, prices, group);
     allCards.push(...cards);
-    setReport.push({ set: set.code, cards: cards.length, url: set.url });
-    console.log(`${set.code}: ${cards.length} cards`);
+    setReport.push({ set: group.code, cards: cards.length, groupId: group.id });
+    console.log(`${group.code}: ${cards.length} cards`);
     await sleep(REQUEST_DELAY_MS);
   }
-
   const uniqueCards = [...new Map(allCards.map(card => [card.productId, card])).values()];
   if (uniqueCards.length < MINIMUM_CARD_COUNT) {
     throw new Error(`Safety stop: parsed ${uniqueCards.length} cards; expected at least ${MINIMUM_CARD_COUNT}`);
   }
-
-  const japanHtml = await fetchHtml(JAPAN_CARD_LIST_URL, 'Japanese official card list');
-  const japaneseCards = parseJapaneseCardList(japanHtml);
-  if (japaneseCards.length < MINIMUM_JAPAN_CARD_COUNT) {
-    throw new Error(`Safety stop: parsed ${japaneseCards.length} Japanese cards; expected at least ${MINIMUM_JAPAN_CARD_COUNT}`);
-  }
-
-  const usProducts = new Set([...uniqueCards]
+  const cards = uniqueCards
     .sort((a, b) => b.marketPrice - a.marketPrice)
     .slice(0, US_CARD_LIMIT)
-    .map(card => card.productId));
-  const cards = mergeJapaneseCatalog(mergePreviousData(uniqueCards, previousCards)
-    .map(card => ({ ...card, jpEnabled: true, usEnabled: usProducts.has(card.productId) }))
-  , japaneseCards)
-    .sort((a, b) => a.setCode.localeCompare(b.setCode) || a.cardNo.localeCompare(b.cardNo) || b.marketPrice - a.marketPrice);
+    .sort((a, b) => a.setCode.localeCompare(b.setCode) || a.cardNo.localeCompare(b.cardNo));
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
-  fs.writeFileSync(INDEX_FILE, replaceCatalog(indexHtml, cards));
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, total: cards.length, japanCards: cards.filter(card => card.jpEnabled).length, japaneseImages: cards.filter(card => card.imageJa).length, usCards: cards.filter(card => card.usEnabled).length, sets: setReport }, null, 2)}\n`);
-  console.log(`Updated ${cards.length} Palworld cards for ${TODAY_JST}`);
+  updateMeta('us', { updatedAt: TODAY_JST, source: 'TCGCSV / TCGplayer daily market data', cardCount: cards.length });
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, parsed: uniqueCards.length, published: cards.length, sets: setReport }, null, 2)}\n`);
+  console.log(`Updated ${cards.length} US Palworld cards for ${TODAY_JST}`);
 }
 
-module.exports = { parsePriceGuide, parseJapaneseCardList, mergePreviousData, mergeJapaneseCatalog, calculateMercariAverage, calculateMercariMarket, replaceCatalog };
+module.exports = { parsePriceGuide, parseTcgCsvGroup, inferColor };
 if (require.main === module) main().catch(error => { console.error(error); process.exit(1); });

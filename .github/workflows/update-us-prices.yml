@@ -1,0 +1,31 @@
+name: Update US Palworld prices
+
+on:
+  schedule:
+    - cron: '20 1,9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: palworld-us-price-update
+  cancel-in-progress: false
+
+jobs:
+  update-us-prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Test US updater
+        run: node scripts/test-update-prices.js
+      - name: Update US catalog
+        run: node scripts/update-prices.js
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update US Palworld prices'
+          file_pattern: cards-us.json market-meta.json price-update-report-us.json
