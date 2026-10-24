@@ -185,9 +185,23 @@ function mergeCatalog(officialCards, previousCards) {
   });
 }
 
-function updateMeta(value) {
+function buildJapanMeta(previous = {}, { cardCount, checked, updated }) {
+  return {
+    ...previous,
+    source: 'Mercari sold listings / Japanese official catalog',
+    cardCount,
+    catalogUpdatedAt: TODAY_JST,
+    priceAttemptedAt: TODAY_JST,
+    checkedThisRun: checked,
+    updatedThisRun: updated,
+    priceUpdatedAt: updated > 0 ? TODAY_JST : (previous.priceUpdatedAt || ''),
+    status: updated > 0 ? 'ok' : 'price_unavailable',
+  };
+}
+
+function updateMeta(createValue) {
   const meta = fs.existsSync(META_FILE) ? JSON.parse(fs.readFileSync(META_FILE, 'utf8')) : {};
-  meta.jp = value;
+  meta.jp = createValue(meta.jp || {});
   fs.writeFileSync(META_FILE, `${JSON.stringify(meta, null, 2)}\n`);
 }
 
@@ -215,12 +229,13 @@ async function main() {
     await sleep(REQUEST_DELAY_MS);
   }
   cards.sort((a, b) => a.jpCardNo.localeCompare(b.jpCardNo));
+  const updatedCount = report.filter(item => item.updated).length;
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
   fs.writeFileSync(STATE_FILE, `${JSON.stringify({ cursor: (start + targets.length) % cards.length, updatedAt: TODAY_JST }, null, 2)}\n`);
-  updateMeta({ updatedAt: TODAY_JST, source: 'Mercari sold listings / Japanese official catalog', cardCount: cards.length, checkedThisRun: targets.length });
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, catalogCards: cards.length, imageCount: cards.filter(card => card.imageJa).length, checked: targets.length, updated: report.filter(item => item.updated).length, cards: report }, null, 2)}\n`);
-  console.log(`Updated Japanese catalog (${cards.length} cards, ${targets.length} Mercari checks)`);
+  updateMeta(previous => buildJapanMeta(previous, { cardCount: cards.length, checked: targets.length, updated: updatedCount }));
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, catalogCards: cards.length, imageCount: cards.filter(card => card.imageJa).length, checked: targets.length, updated: updatedCount, cards: report }, null, 2)}\n`);
+  console.log(`Updated Japanese catalog (${cards.length} cards, ${targets.length} Mercari checks, ${updatedCount} price updates)`);
 }
 
-module.exports = { parseJapaneseCardList, parseJapaneseApiItems, parseMercariSold, calculateMercariAverage, calculateMercariMarket, buildMercariSearchUrl, mergeCatalog };
+module.exports = { parseJapaneseCardList, parseJapaneseApiItems, parseMercariSold, calculateMercariAverage, calculateMercariMarket, buildMercariSearchUrl, mergeCatalog, buildJapanMeta };
 if (require.main === module) main().catch(error => { console.error(error); process.exit(1); });

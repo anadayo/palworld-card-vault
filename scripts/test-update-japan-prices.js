@@ -7,6 +7,7 @@ const {
   calculateMercariMarket,
   buildMercariSearchUrl,
   mergeCatalog,
+  buildJapanMeta,
 } = require('./update-japan-prices');
 
 const officialFixture = `<a href="/cardlist/detail?id=25"><img src="/images/cards/BP01-025OSR.png" alt="竜を呼ぶ声 - オコチョ"><span>BP01-025OSR</span><span>OSR</span></a>`;
@@ -45,4 +46,12 @@ assert.match(search.searchParams.get('keyword'), /BP01-025OSR/);
 const merged = mergeCatalog(cards, [{ jpCardNo: 'BP01-025OSR', mercariAverage: 1100, imageJa: 'old' }]);
 assert.equal(merged[0].mercariAverage, 1100);
 assert.notEqual(merged[0].imageJa, 'old');
+const unavailableMeta = buildJapanMeta({ priceUpdatedAt: '2026-10-20' }, { cardCount: 292, checked: 30, updated: 0 });
+assert.equal(unavailableMeta.catalogUpdatedAt.length, 10);
+assert.equal(unavailableMeta.priceUpdatedAt, '2026-10-20');
+assert.equal(unavailableMeta.updatedThisRun, 0);
+assert.equal(unavailableMeta.status, 'price_unavailable');
+const successfulMeta = buildJapanMeta(unavailableMeta, { cardCount: 292, checked: 30, updated: 4 });
+assert.equal(successfulMeta.priceUpdatedAt, successfulMeta.catalogUpdatedAt);
+assert.equal(successfulMeta.status, 'ok');
 console.log('Japan price updater tests passed');

@@ -1,9 +1,13 @@
 {
   "jp": {
-    "updatedAt": "2026-10-23",
     "source": "Mercari sold listings / Japanese official catalog",
     "cardCount": 292,
-    "checkedThisRun": 30
+    "catalogUpdatedAt": "2026-10-23",
+    "priceAttemptedAt": "2026-10-23",
+    "priceUpdatedAt": "",
+    "checkedThisRun": 30,
+    "updatedThisRun": 0,
+    "status": "price_unavailable"
   },
   "us": {
     "updatedAt": "2026-10-23",
