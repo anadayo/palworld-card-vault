@@ -1,157 +1,157 @@
 {
-  "date": "2026-10-25",
+  "date": "2026-10-26",
   "catalogCards": 292,
   "imageCount": 292,
   "checked": 30,
   "updated": 0,
   "cards": [
     {
-      "card": "PR-005",
+      "card": "SOUL-020",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-005S",
+      "card": "SOUL-021",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-006",
+      "card": "SOUL-022",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-006S",
+      "card": "SOUL-023",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-007",
+      "card": "SOUL-024",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-007S",
+      "card": "SS01-001",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-008",
+      "card": "SS01-001OSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-008S",
+      "card": "SS01-002",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-009",
+      "card": "SS01-002OSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-010",
+      "card": "SS01-003",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-011",
+      "card": "SS01-003OSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-012",
+      "card": "SS01-004",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-013",
+      "card": "SS01-004OSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-014",
+      "card": "SS01-005",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-015",
+      "card": "SS01-005OSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-016",
+      "card": "SOUL-001",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-017",
+      "card": "TD02-001",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-018",
+      "card": "TD02-001TSP",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-019",
+      "card": "TD02-001TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "PR-029",
+      "card": "TD02-002",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-000",
+      "card": "TD02-003",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-003",
+      "card": "TD02-003TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-005",
+      "card": "TD02-004",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-006",
+      "card": "TD02-005",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-007",
+      "card": "TD02-006",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-008",
+      "card": "TD02-006TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-013",
+      "card": "TD02-007",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-014",
+      "card": "TD02-007TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-015",
+      "card": "TD02-008",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-016",
+      "card": "TD02-008TSR",
       "sales": 0,
       "updated": false
     }
