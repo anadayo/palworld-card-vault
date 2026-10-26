@@ -10,7 +10,7 @@
     "status": "price_unavailable"
   },
   "us": {
-    "updatedAt": "2026-10-25",
+    "updatedAt": "2026-10-26",
     "source": "TCGCSV / TCGplayer daily market data",
     "cardCount": 80
   }
