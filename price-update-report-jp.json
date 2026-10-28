@@ -1,157 +1,157 @@
 {
-  "date": "2026-10-28",
+  "date": "2026-10-29",
   "catalogCards": 456,
   "imageCount": 456,
   "checked": 30,
   "updated": 0,
   "cards": [
     {
-      "card": "BP02-088",
+      "card": "TD02-001",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-089",
+      "card": "TD02-001TSP",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-090",
+      "card": "TD02-001TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-091",
+      "card": "TD02-002",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-092",
+      "card": "TD02-003",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-093",
+      "card": "TD02-003TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-094",
+      "card": "TD02-004",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-094OSR",
+      "card": "TD02-005",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-094SP",
+      "card": "TD02-006",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-095",
+      "card": "TD02-006TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-095SR",
+      "card": "TD02-007",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-096",
+      "card": "TD02-007TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-097",
+      "card": "TD02-008",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-097OSR",
+      "card": "TD02-008TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-097SSP",
+      "card": "TD02-009",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-098",
+      "card": "TD02-010",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-099",
+      "card": "TD02-011",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-100",
+      "card": "TD02-012",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "BP02-100SR",
+      "card": "TD02-012TSP",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-001",
+      "card": "TD02-012TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-001OSR",
+      "card": "TD02-013",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-002",
+      "card": "TD02-014",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-002OSR",
+      "card": "TD02-014TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-003",
+      "card": "TD02-015",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-003OSR",
+      "card": "TD02-016",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-004",
+      "card": "TD02-016TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-004OSR",
+      "card": "TD02-017",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-005",
+      "card": "TD02-018",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SS01-005OSR",
+      "card": "TD02-018TSR",
       "sales": 0,
       "updated": false
     },
     {
-      "card": "SOUL-001",
+      "card": "TD02-019",
       "sales": 0,
       "updated": false
     }
