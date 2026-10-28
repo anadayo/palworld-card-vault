@@ -9,7 +9,7 @@
     "sub": "OSR",
     "color": "Red",
     "dot": "#ff6557",
-    "marketPrice": 10.99,
+    "marketPrice": 10.95,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713880_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713880/palworld-official-card-game-bp01-dawn-of-palpagos-jormuntide-ignis-savage-lava-dragon-osr"
   },
@@ -37,7 +37,7 @@
     "sub": "OSR",
     "color": "Red",
     "dot": "#ff6557",
-    "marketPrice": 7.99,
+    "marketPrice": 7.89,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713883_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713883/palworld-official-card-game-bp01-dawn-of-palpagos-suzaku-hellfire-wings-osr"
   },
@@ -93,7 +93,7 @@
     "sub": "OSR",
     "color": "Red",
     "dot": "#ff6557",
-    "marketPrice": 6.03,
+    "marketPrice": 5.93,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713914_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713914/palworld-official-card-game-bp01-dawn-of-palpagos-axels-strategy-osr"
   },
@@ -210,20 +210,6 @@
     "tcgUrl": "https://www.tcgplayer.com/product/713925/palworld-official-card-game-bp01-dawn-of-palpagos-jormuntide-surging-sea-serpent-sp"
   },
   {
-    "id": "EBP01-028SR-713927",
-    "cardNo": "EBP01-028SR",
-    "productId": "713927",
-    "name": "Pengullet - Yearning for the Sky (SR)",
-    "set": "Dawn of Palpagos",
-    "setCode": "BP01",
-    "sub": "SR",
-    "color": "Blue",
-    "dot": "#55c6e8",
-    "marketPrice": 5.19,
-    "image": "https://tcgplayer-cdn.tcgplayer.com/product/713927_in_1000x1000.jpg",
-    "tcgUrl": "https://www.tcgplayer.com/product/713927/palworld-official-card-game-bp01-dawn-of-palpagos-pengullet-yearning-for-the-sky-sr"
-  },
-  {
     "id": "EBP01-046OSR-713951",
     "cardNo": "EBP01-046OSR",
     "productId": "713951",
@@ -233,7 +219,7 @@
     "sub": "OSR",
     "color": "Blue",
     "dot": "#55c6e8",
-    "marketPrice": 6.44,
+    "marketPrice": 6.02,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713951_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713951/palworld-official-card-game-bp01-dawn-of-palpagos-victors-strategy-osr"
   },
@@ -275,7 +261,7 @@
     "sub": "SSP",
     "color": "Green",
     "dot": "#60d98a",
-    "marketPrice": 470.9,
+    "marketPrice": 460.12,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713958_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713958/palworld-official-card-game-bp01-dawn-of-palpagos-lyleen-blessing-of-the-goddess-ssp"
   },
@@ -289,7 +275,7 @@
     "sub": "OSR",
     "color": "Green",
     "dot": "#60d98a",
-    "marketPrice": 9.26,
+    "marketPrice": 9.24,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713960_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713960/palworld-official-card-game-bp01-dawn-of-palpagos-digtoise-seismic-drillback-osr"
   },
@@ -331,7 +317,7 @@
     "sub": "SP",
     "color": "Green",
     "dot": "#60d98a",
-    "marketPrice": 45.45,
+    "marketPrice": 45.17,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713964_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713964/palworld-official-card-game-bp01-dawn-of-palpagos-petallia-sweet-blessings-sp"
   },
@@ -345,7 +331,7 @@
     "sub": "OSR",
     "color": "Green",
     "dot": "#60d98a",
-    "marketPrice": 9.59,
+    "marketPrice": 9.18,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713991_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713991/palworld-official-card-game-bp01-dawn-of-palpagos-lilys-strategy-osr"
   },
@@ -429,7 +415,7 @@
     "sub": "OSR",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 7.06,
+    "marketPrice": 6.97,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714002_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714002/palworld-official-card-game-bp01-dawn-of-palpagos-katress-abyssal-sorcerer-osr"
   },
@@ -443,7 +429,7 @@
     "sub": "SP",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 123.54,
+    "marketPrice": 121.79,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714003_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714003/palworld-official-card-game-bp01-dawn-of-palpagos-katress-abyssal-sorcerer-sp"
   },
@@ -457,7 +443,7 @@
     "sub": "RR",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 14.05,
+    "marketPrice": 13.75,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714031_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714031/palworld-official-card-game-bp01-dawn-of-palpagos-zoes-strategy"
   },
@@ -471,7 +457,7 @@
     "sub": "OSR",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 23.07,
+    "marketPrice": 22.77,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714032_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714032/palworld-official-card-game-bp01-dawn-of-palpagos-zoes-strategy-osr"
   },
@@ -485,9 +471,65 @@
     "sub": "SP",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 169.9,
+    "marketPrice": 165.3,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714033_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714033/palworld-official-card-game-bp01-dawn-of-palpagos-zoes-strategy-sp"
+  },
+  {
+    "id": "EBP02-025OSR-725484",
+    "cardNo": "EBP02-025OSR",
+    "productId": "725484",
+    "name": "Frostallion - Everlasting Rime (SR)",
+    "set": "Legends Awaken",
+    "setCode": "BP02",
+    "sub": "OSR",
+    "color": "Blue",
+    "dot": "#55c6e8",
+    "marketPrice": 59.99,
+    "image": "https://tcgplayer-cdn.tcgplayer.com/product/725484_in_1000x1000.jpg",
+    "tcgUrl": "https://www.tcgplayer.com/product/725484/palworld-official-card-game-bp02-legends-awaken-frostallion-everlasting-rime-sr"
+  },
+  {
+    "id": "EBP02-046-725515",
+    "cardNo": "EBP02-046",
+    "productId": "725515",
+    "name": "Victor's Gambit",
+    "set": "Legends Awaken",
+    "setCode": "BP02",
+    "sub": "RR",
+    "color": "Blue",
+    "dot": "#55c6e8",
+    "marketPrice": 9.99,
+    "image": "https://tcgplayer-cdn.tcgplayer.com/product/725515_in_1000x1000.jpg",
+    "tcgUrl": "https://www.tcgplayer.com/product/725515/palworld-official-card-game-bp02-legends-awaken-victors-gambit"
+  },
+  {
+    "id": "EBP02-094-725594",
+    "cardNo": "EBP02-094",
+    "productId": "725594",
+    "name": "Zoe's Gambit",
+    "set": "Legends Awaken",
+    "setCode": "BP02",
+    "sub": "RR",
+    "color": "Purple",
+    "dot": "#b983ed",
+    "marketPrice": 17.99,
+    "image": "https://tcgplayer-cdn.tcgplayer.com/product/725594_in_1000x1000.jpg",
+    "tcgUrl": "https://www.tcgplayer.com/product/725594/palworld-official-card-game-bp02-legends-awaken-zoes-gambit"
+  },
+  {
+    "id": "EBP02-097-725600",
+    "cardNo": "EBP02-097",
+    "productId": "725600",
+    "name": "Jetragon - Legendary Guardian Dragon",
+    "set": "Legends Awaken",
+    "setCode": "BP02",
+    "sub": "RR",
+    "color": "Neutral",
+    "dot": "#8c9aa0",
+    "marketPrice": 14.99,
+    "image": "https://tcgplayer-cdn.tcgplayer.com/product/725600_in_1000x1000.jpg",
+    "tcgUrl": "https://www.tcgplayer.com/product/725600/palworld-official-card-game-bp02-legends-awaken-jetragon-legendary-guardian-dragon"
   },
   {
     "id": "EPR-001-714388",
@@ -499,7 +541,7 @@
     "sub": "PR",
     "color": "Neutral",
     "dot": "#8c9aa0",
-    "marketPrice": 12.88,
+    "marketPrice": 12.8,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714388_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714388/palworld-official-card-game-palworld-promo-cards-lamball-my-first-pal-bushiroad-expo-2026-epr-001"
   },
@@ -527,7 +569,7 @@
     "sub": "PR",
     "color": "Red",
     "dot": "#ff6557",
-    "marketPrice": 9.19,
+    "marketPrice": 8.92,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714395_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714395/palworld-official-card-game-palworld-promo-cards-blazehowl-hellflame-defender-epr-003"
   },
@@ -544,20 +586,6 @@
     "marketPrice": 144.48,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/719815_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/719815/palworld-official-card-game-palworld-promo-cards-blazehowl-hellflame-defender-epr-003s"
-  },
-  {
-    "id": "EPR-004-714396",
-    "cardNo": "EPR-004",
-    "productId": "714396",
-    "name": "Fuack - Manic Wave Ripper - EPR-004",
-    "set": "Palworld Promo Cards",
-    "setCode": "PROMO",
-    "sub": "PR",
-    "color": "Blue",
-    "dot": "#55c6e8",
-    "marketPrice": 5.32,
-    "image": "https://tcgplayer-cdn.tcgplayer.com/product/714396_in_1000x1000.jpg",
-    "tcgUrl": "https://www.tcgplayer.com/product/714396/palworld-official-card-game-palworld-promo-cards-fuack-manic-wave-ripper-epr-004"
   },
   {
     "id": "EPR-004S-719816",
@@ -583,7 +611,7 @@
     "sub": "PR",
     "color": "Blue",
     "dot": "#55c6e8",
-    "marketPrice": 7.12,
+    "marketPrice": 6.89,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714399_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714399/palworld-official-card-game-palworld-promo-cards-cryolinx-arctic-ordeal-epr-005"
   },
@@ -667,7 +695,7 @@
     "sub": "PR",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 82.48,
+    "marketPrice": 74.37,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/719821_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/719821/palworld-official-card-game-palworld-promo-cards-loupmoon-glinting-moonlight-epr-009s"
   },
@@ -695,7 +723,7 @@
     "sub": "PR",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 142.38,
+    "marketPrice": 134.65,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/722739_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/722739/palworld-official-card-game-palworld-promo-cards-lovander-heartstealer-epr-011"
   },
@@ -709,7 +737,7 @@
     "sub": "PR",
     "color": "Neutral",
     "dot": "#8c9aa0",
-    "marketPrice": 112.47,
+    "marketPrice": 102.63,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714402_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714402/palworld-official-card-game-palworld-promo-cards-soul-esoul-000"
   },
@@ -737,23 +765,9 @@
     "sub": "PR",
     "color": "Neutral",
     "dot": "#8c9aa0",
-    "marketPrice": 11.18,
+    "marketPrice": 11.27,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714405_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714405/palworld-official-card-game-palworld-promo-cards-soul-esoul-005"
-  },
-  {
-    "id": "ESOUL-006-714406",
-    "cardNo": "ESOUL-006",
-    "productId": "714406",
-    "name": "Soul - ESOUL-006",
-    "set": "Palworld Promo Cards",
-    "setCode": "PROMO",
-    "sub": "PR",
-    "color": "Neutral",
-    "dot": "#8c9aa0",
-    "marketPrice": 5.13,
-    "image": "https://tcgplayer-cdn.tcgplayer.com/product/714406_in_1000x1000.jpg",
-    "tcgUrl": "https://www.tcgplayer.com/product/714406/palworld-official-card-game-palworld-promo-cards-soul-esoul-006"
   },
   {
     "id": "ESOUL-007-714407",
@@ -765,7 +779,7 @@
     "sub": "PR",
     "color": "Neutral",
     "dot": "#8c9aa0",
-    "marketPrice": 6.36,
+    "marketPrice": 6.44,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714407_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714407/palworld-official-card-game-palworld-promo-cards-soul-esoul-007"
   },
@@ -779,7 +793,7 @@
     "sub": "PR",
     "color": "Neutral",
     "dot": "#8c9aa0",
-    "marketPrice": 659.17,
+    "marketPrice": 646.87,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/714408_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/714408/palworld-official-card-game-palworld-promo-cards-soul-esoul-008-nox"
   },
@@ -807,7 +821,7 @@
     "sub": "TSR",
     "color": "Red",
     "dot": "#ff6557",
-    "marketPrice": 10.5,
+    "marketPrice": 9.83,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713803_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713803/palworld-official-card-game-td01-dawn-of-palpagos-red•blue-grizzbolt-rumbling-tank-tsr"
   },
@@ -863,7 +877,7 @@
     "sub": "TSR",
     "color": "Blue",
     "dot": "#55c6e8",
-    "marketPrice": 16.8,
+    "marketPrice": 16.93,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713820_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713820/palworld-official-card-game-td01-dawn-of-palpagos-red•blue-elphidran-aqua-gentle-ripples-tsr"
   },
@@ -919,7 +933,7 @@
     "sub": "TSR",
     "color": "Neutral",
     "dot": "#8c9aa0",
-    "marketPrice": 19.92,
+    "marketPrice": 19.69,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713836_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713836/palworld-official-card-game-td01-dawn-of-palpagos-red•blue-lamball-my-first-pal-tsr"
   },
@@ -1008,20 +1022,6 @@
     "tcgUrl": "https://www.tcgplayer.com/product/713851/palworld-official-card-game-td02-dawn-of-palpagos-green•purple-mammorest-roar-of-the-wilds-tsr"
   },
   {
-    "id": "ETD02-008TSR-713853",
-    "cardNo": "ETD02-008TSR",
-    "productId": "713853",
-    "name": "Berry Plantation (TSR)",
-    "set": "Dawn of Palpagos Green/Purple",
-    "setCode": "TD02",
-    "sub": "TSR",
-    "color": "Green",
-    "dot": "#60d98a",
-    "marketPrice": 5.4,
-    "image": "https://tcgplayer-cdn.tcgplayer.com/product/713853_in_1000x1000.jpg",
-    "tcgUrl": "https://www.tcgplayer.com/product/713853/palworld-official-card-game-td02-dawn-of-palpagos-green•purple-berry-plantation-tsr"
-  },
-  {
     "id": "ETD02-012TSP-713858",
     "cardNo": "ETD02-012TSP",
     "productId": "713858",
@@ -1045,7 +1045,7 @@
     "sub": "TSR",
     "color": "Purple",
     "dot": "#b983ed",
-    "marketPrice": 17.04,
+    "marketPrice": 16.85,
     "image": "https://tcgplayer-cdn.tcgplayer.com/product/713859_in_1000x1000.jpg",
     "tcgUrl": "https://www.tcgplayer.com/product/713859/palworld-official-card-game-td02-dawn-of-palpagos-green•purple-astegon-aegis-wyvern-of-death-tsr"
   },
