@@ -88,6 +88,12 @@ function walk(value, visit) {
   for (const child of Object.values(value)) walk(child, visit);
 }
 
+function detectMercariPayload(html = '') {
+  if (/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>/i.test(html)) return 'next_data';
+  if (/self\.__next_f\.push\(/.test(html)) return 'app_router_without_items';
+  return 'unknown';
+}
+
 function parseMercariSold(html, card) {
   const script = html.match(/<script[^>]+id=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/i)?.[1];
   if (!script) return [];
@@ -185,7 +191,7 @@ function mergeCatalog(officialCards, previousCards) {
   });
 }
 
-function buildJapanMeta(previous = {}, { cardCount, checked, updated }) {
+function buildJapanMeta(previous = {}, { cardCount, checked, updated, errorCode = '' }) {
   return {
     ...previous,
     source: 'Mercari sold listings / Japanese official catalog',
@@ -196,6 +202,7 @@ function buildJapanMeta(previous = {}, { cardCount, checked, updated }) {
     updatedThisRun: updated,
     priceUpdatedAt: updated > 0 ? TODAY_JST : (previous.priceUpdatedAt || ''),
     status: updated > 0 ? 'ok' : 'price_unavailable',
+    errorCode: updated > 0 ? '' : errorCode,
   };
 }
 
@@ -216,9 +223,16 @@ async function main() {
   const start = Number(state.cursor || 0) % cards.length;
   const targets = Array.from({ length: Math.min(BATCH_SIZE, cards.length) }, (_, index) => cards[(start + index) % cards.length]);
   const report = [];
+  let sourceError = '';
   for (const card of targets) {
     try {
       const html = await fetchHtml(buildMercariSearchUrl(card), card.jpCardNo);
+      const payload = detectMercariPayload(html);
+      if (payload !== 'next_data') {
+        sourceError = `mercari_${payload}`;
+        report.push({ card: card.jpCardNo, sales: 0, updated: false, error: sourceError });
+        break;
+      }
       const sales = parseMercariSold(html, card);
       const market = calculateMercariMarket(sales);
       if (market) Object.assign(card, market);
@@ -230,12 +244,14 @@ async function main() {
   }
   cards.sort((a, b) => a.jpCardNo.localeCompare(b.jpCardNo));
   const updatedCount = report.filter(item => item.updated).length;
+  const checkedCount = report.length;
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
-  fs.writeFileSync(STATE_FILE, `${JSON.stringify({ cursor: (start + targets.length) % cards.length, updatedAt: TODAY_JST }, null, 2)}\n`);
-  updateMeta(previous => buildJapanMeta(previous, { cardCount: cards.length, checked: targets.length, updated: updatedCount }));
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, catalogCards: cards.length, imageCount: cards.filter(card => card.imageJa).length, checked: targets.length, updated: updatedCount, cards: report }, null, 2)}\n`);
-  console.log(`Updated Japanese catalog (${cards.length} cards, ${targets.length} Mercari checks, ${updatedCount} price updates)`);
+  const nextCursor = sourceError ? start : (start + targets.length) % cards.length;
+  fs.writeFileSync(STATE_FILE, `${JSON.stringify({ cursor: nextCursor, updatedAt: TODAY_JST }, null, 2)}\n`);
+  updateMeta(previous => buildJapanMeta(previous, { cardCount: cards.length, checked: checkedCount, updated: updatedCount, errorCode: sourceError }));
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, catalogCards: cards.length, imageCount: cards.filter(card => card.imageJa).length, checked: checkedCount, updated: updatedCount, sourceStatus: sourceError ? 'unavailable' : 'available', errorCode: sourceError, cards: report }, null, 2)}\n`);
+  console.log(`Updated Japanese catalog (${cards.length} cards, ${checkedCount} Mercari checks, ${updatedCount} price updates${sourceError ? `, ${sourceError}` : ''})`);
 }
 
-module.exports = { parseJapaneseCardList, parseJapaneseApiItems, parseMercariSold, calculateMercariAverage, calculateMercariMarket, buildMercariSearchUrl, mergeCatalog, buildJapanMeta };
+module.exports = { parseJapaneseCardList, parseJapaneseApiItems, detectMercariPayload, parseMercariSold, calculateMercariAverage, calculateMercariMarket, buildMercariSearchUrl, mergeCatalog, buildJapanMeta };
 if (require.main === module) main().catch(error => { console.error(error); process.exit(1); });

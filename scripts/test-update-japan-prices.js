@@ -2,6 +2,7 @@ const assert = require('assert');
 const {
   parseJapaneseCardList,
   parseJapaneseApiItems,
+  detectMercariPayload,
   parseMercariSold,
   calculateMercariAverage,
   calculateMercariMarket,
@@ -31,6 +32,9 @@ const nextData = { props: { items: [
   { id: 'm5', name: '英語版 EBP01-025', price: 800 },
 ] } };
 const mercariFixture = `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(nextData)}</script>`;
+assert.equal(detectMercariPayload(mercariFixture), 'next_data');
+assert.equal(detectMercariPayload('<script>self.__next_f.push([1,"data"])</script>'), 'app_router_without_items');
+assert.equal(detectMercariPayload('<html></html>'), 'unknown');
 const sales = parseMercariSold(mercariFixture, cards[0]);
 assert.equal(sales.length, 3);
 assert.deepEqual(calculateMercariAverage(sales), { average: 1100, sampleCount: 3 });
@@ -51,7 +55,10 @@ assert.equal(unavailableMeta.catalogUpdatedAt.length, 10);
 assert.equal(unavailableMeta.priceUpdatedAt, '2026-10-20');
 assert.equal(unavailableMeta.updatedThisRun, 0);
 assert.equal(unavailableMeta.status, 'price_unavailable');
+const sourceUnavailableMeta = buildJapanMeta(unavailableMeta, { cardCount: 292, checked: 1, updated: 0, errorCode: 'mercari_app_router_without_items' });
+assert.equal(sourceUnavailableMeta.errorCode, 'mercari_app_router_without_items');
 const successfulMeta = buildJapanMeta(unavailableMeta, { cardCount: 292, checked: 30, updated: 4 });
 assert.equal(successfulMeta.priceUpdatedAt, successfulMeta.catalogUpdatedAt);
 assert.equal(successfulMeta.status, 'ok');
+assert.equal(successfulMeta.errorCode, '');
 console.log('Japan price updater tests passed');
