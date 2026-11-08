@@ -1,7 +1,10 @@
 {
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "parsed": 425,
   "published": 80,
+  "successful": 80,
+  "failed": 0,
+  "priceUpdatedAt": "2026-11-09",
   "sets": [
     {
       "set": "BP01",
