@@ -2,12 +2,16 @@
   "jp": {
     "source": "Mercari sold listings / Japanese official catalog",
     "cardCount": 456,
-    "catalogUpdatedAt": "2026-11-08",
-    "priceAttemptedAt": "2026-11-08",
+    "catalogUpdatedAt": "2026-11-09",
+    "priceAttemptedAt": "2026-11-09",
     "priceUpdatedAt": "",
-    "checkedThisRun": 30,
+    "checkedThisRun": 1,
     "updatedThisRun": 0,
-    "status": "price_unavailable"
+    "status": "price_unavailable",
+    "successfulThisRun": 0,
+    "failedThisRun": 1,
+    "updatedAt": "",
+    "errorCode": "mercari_app_router_without_items"
   },
   "us": {
     "updatedAt": "2026-11-09",
