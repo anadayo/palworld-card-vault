@@ -9,6 +9,7 @@ const PAGE_PATH = '/palworld-card-vault/';
 const EVENTS = [
   'palworld_mercari_affiliate_click',
   'shopping_price_click',
+  'offer_outbound',
   'search',
   'share',
   'market_switch',
@@ -150,10 +151,20 @@ async function main() {
   ]);
   const totals = metrics(summary);
   const events = eventCounts(eventReport);
-  const externalClicks = (events.palworld_mercari_affiliate_click || 0) + (events.shopping_price_click || 0);
+  const externalClicks = (events.palworld_mercari_affiliate_click || 0)
+    + (events.shopping_price_click || 0)
+    + (events.offer_outbound || 0);
   const pageViews = totals.screenPageViews || 0;
   const marketMeta = JSON.parse(fs.readFileSync('market-meta.json', 'utf8'));
-  const priceDate = marketMeta.jp?.updatedAt || marketMeta.us?.updatedAt || '';
+  const jpReport = fs.existsSync('price-update-report-jp.json') ? JSON.parse(fs.readFileSync('price-update-report-jp.json', 'utf8')) : {};
+  const usReport = fs.existsSync('price-update-report-us.json') ? JSON.parse(fs.readFileSync('price-update-report-us.json', 'utf8')) : {};
+  const jpPriceDate = marketMeta.jp?.priceUpdatedAt || marketMeta.jp?.updatedAt || '';
+  const usPriceDate = marketMeta.us?.priceUpdatedAt || marketMeta.us?.updatedAt || '';
+  const jpUpdated = Number(jpReport.updated || 0);
+  const jpFailed = Number(jpReport.failed || 0);
+  const usUpdated = Number(usReport.successful ?? usReport.published ?? 0);
+  const usFailed = Number(usReport.failed || 0);
+  const priceDate = [jpPriceDate, usPriceDate].filter(Boolean).sort().at(-1) || '';
   const properties = {
     '日次レポート': { title: [{ text: { content: title(date) } }] },
     '日付': { date: { start: date } },
@@ -169,12 +180,20 @@ async function main() {
     'Xシェア': number(events.share || 0),
     '市場切替': number(events.market_switch || 0),
     'ウォッチ登録': number(events.watchlist_toggle || 0),
+    '日本価格データ日': jpPriceDate ? { date: { start: jpPriceDate } } : { date: null },
+    '米国価格データ日': usPriceDate ? { date: { start: usPriceDate } } : { date: null },
+    '日本価格実更新': number(jpUpdated),
+    '日本価格失敗': number(jpFailed),
+    '米国価格実更新': number(usUpdated),
+    '米国価格失敗': number(usFailed),
     '価格データ日': priceDate ? { date: { start: priceDate } } : { date: null },
-    '価格更新': { select: { name: priceDate >= date ? '最新' : '要確認' } },
+    '価格更新': { select: { name: jpUpdated > 0 && usUpdated > 0 && jpPriceDate >= date && usPriceDate >= date ? '最新' : '要確認' } },
+    '計測状態': { rich_text: [{ text: { content: '取得済み' } }] },
+    '改善メモ': { rich_text: [{ text: { content: `GA4取得成功。日本価格実更新${jpUpdated}件、米国価格${usUpdated}件。` } }] },
     'サイト': { url: SITE_URL },
     '同期日時': { date: { start: jstNowIso() } },
   };
-  console.log(JSON.stringify({ date, metrics: totals, events, priceDate, ...(await upsert(date, properties)) }, null, 2));
+  console.log(JSON.stringify({ date, metrics: totals, events, priceDate, jpPriceDate, usPriceDate, jpUpdated, usUpdated, ...(await upsert(date, properties)) }, null, 2));
 }
 
 main().catch(error => {

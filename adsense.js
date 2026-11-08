@@ -1,5 +1,7 @@
 (() => {
   const config = Object.freeze({
+    reviewStatus: "disabled",
+    deliveryEnabled: false,
     client: "ca-pub-6265700167821181",
     slots: { home: "" },
   });
@@ -9,18 +11,18 @@
 
   document.querySelectorAll("[data-ad-slot]").forEach((container) => {
     const slot = config.slots[container.dataset.adSlot];
-    if (preview && !clientReady) {
+    if (preview) {
       container.classList.add("is-ready", "is-preview");
       container.innerHTML = '<span class="ad-slot-label">広告プレビュー</span><div style="min-height:90px;display:grid;place-items:center;border:1px dashed currentColor;border-radius:8px;opacity:.55">AdSense 審査後に配信</div>';
       return;
     }
-    if (!clientReady || !/^\d+$/.test(slot || "")) return;
+    if (config.reviewStatus !== "ready" || !config.deliveryEnabled || !clientReady || !/^\d+$/.test(slot || "")) return;
     container.classList.add("is-ready");
     container.innerHTML = `<span class="ad-slot-label">広告</span><ins class="adsbygoogle" style="display:block" data-ad-client="${config.client}" data-ad-slot="${slot}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
     (window.adsbygoogle = window.adsbygoogle || []).push({});
   });
 
-  if (!clientReady || document.querySelector('script[data-vault-adsense="1"]')) return;
+  if (preview || config.reviewStatus !== "ready" || !config.deliveryEnabled || !clientReady || document.querySelector('script[data-vault-adsense="1"]')) return;
   const script = document.createElement("script");
   script.async = true;
   script.crossOrigin = "anonymous";

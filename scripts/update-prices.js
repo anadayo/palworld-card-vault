@@ -168,8 +168,8 @@ async function main() {
     .slice(0, US_CARD_LIMIT)
     .sort((a, b) => a.setCode.localeCompare(b.setCode) || a.cardNo.localeCompare(b.cardNo));
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
-  updateMeta('us', { updatedAt: TODAY_JST, source: 'TCGCSV / TCGplayer daily market data', cardCount: cards.length });
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, parsed: uniqueCards.length, published: cards.length, sets: setReport }, null, 2)}\n`);
+  updateMeta('us', { updatedAt: TODAY_JST, priceUpdatedAt: TODAY_JST, source: 'TCGCSV / TCGplayer daily market data', cardCount: cards.length, successfulThisRun: cards.length, failedThisRun: 0 });
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, parsed: uniqueCards.length, published: cards.length, successful: cards.length, failed: 0, priceUpdatedAt: TODAY_JST, sets: setReport }, null, 2)}\n`);
   console.log(`Updated ${cards.length} US Palworld cards for ${TODAY_JST}`);
 }
 

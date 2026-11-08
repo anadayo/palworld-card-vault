@@ -191,7 +191,7 @@ function mergeCatalog(officialCards, previousCards) {
   });
 }
 
-function buildJapanMeta(previous = {}, { cardCount, checked, updated, errorCode = '' }) {
+function buildJapanMeta(previous = {}, { cardCount, checked, updated, failed, errorCode = '' }) {
   return {
     ...previous,
     source: 'Mercari sold listings / Japanese official catalog',
@@ -200,7 +200,10 @@ function buildJapanMeta(previous = {}, { cardCount, checked, updated, errorCode 
     priceAttemptedAt: TODAY_JST,
     checkedThisRun: checked,
     updatedThisRun: updated,
-    priceUpdatedAt: updated > 0 ? TODAY_JST : (previous.priceUpdatedAt || ''),
+    successfulThisRun: updated,
+    failedThisRun: failed,
+    updatedAt: updated > 0 ? TODAY_JST : (previous.priceUpdatedAt || previous.updatedAt || ''),
+    priceUpdatedAt: updated > 0 ? TODAY_JST : (previous.priceUpdatedAt || previous.updatedAt || ''),
     status: updated > 0 ? 'ok' : 'price_unavailable',
     errorCode: updated > 0 ? '' : errorCode,
   };
@@ -245,11 +248,13 @@ async function main() {
   cards.sort((a, b) => a.jpCardNo.localeCompare(b.jpCardNo));
   const updatedCount = report.filter(item => item.updated).length;
   const checkedCount = report.length;
+  const failedCount = report.filter(item => item.error).length;
   fs.writeFileSync(CATALOG_FILE, `${JSON.stringify(cards, null, 2)}\n`);
   const nextCursor = sourceError ? start : (start + targets.length) % cards.length;
   fs.writeFileSync(STATE_FILE, `${JSON.stringify({ cursor: nextCursor, updatedAt: TODAY_JST }, null, 2)}\n`);
-  updateMeta(previous => buildJapanMeta(previous, { cardCount: cards.length, checked: checkedCount, updated: updatedCount, errorCode: sourceError }));
-  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, catalogCards: cards.length, imageCount: cards.filter(card => card.imageJa).length, checked: checkedCount, updated: updatedCount, sourceStatus: sourceError ? 'unavailable' : 'available', errorCode: sourceError, cards: report }, null, 2)}\n`);
+  updateMeta(previous => buildJapanMeta(previous, { cardCount: cards.length, checked: checkedCount, updated: updatedCount, failed: failedCount, errorCode: sourceError }));
+  const currentMeta = JSON.parse(fs.readFileSync(META_FILE, 'utf8'));
+  fs.writeFileSync(REPORT_FILE, `${JSON.stringify({ date: TODAY_JST, catalogCards: cards.length, imageCount: cards.filter(card => card.imageJa).length, checked: checkedCount, updated: updatedCount, failed: failedCount, priceUpdatedAt: currentMeta.jp.priceUpdatedAt || '', sourceStatus: sourceError ? 'unavailable' : 'available', errorCode: sourceError, cards: report }, null, 2)}\n`);
   console.log(`Updated Japanese catalog (${cards.length} cards, ${checkedCount} Mercari checks, ${updatedCount} price updates${sourceError ? `, ${sourceError}` : ''})`);
 }
 
