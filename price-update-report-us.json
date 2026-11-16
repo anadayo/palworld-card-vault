@@ -1,6 +1,6 @@
 {
   "date": "2026-11-16",
-  "parsed": 438,
+  "parsed": 439,
   "published": 80,
   "successful": 80,
   "failed": 0,
@@ -28,7 +28,7 @@
     },
     {
       "set": "PROMO",
-      "cards": 35,
+      "cards": 36,
       "groupId": 24851
     },
     {
