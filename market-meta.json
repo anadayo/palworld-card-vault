@@ -14,8 +14,8 @@
     "errorCode": "mercari_app_router_without_items"
   },
   "us": {
-    "updatedAt": "2026-11-17",
-    "priceUpdatedAt": "2026-11-17",
+    "updatedAt": "2026-11-18",
+    "priceUpdatedAt": "2026-11-18",
     "source": "TCGCSV / TCGplayer daily market data",
     "cardCount": 80,
     "successfulThisRun": 80,
