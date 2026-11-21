@@ -1,6 +1,6 @@
 {
   "date": "2026-11-21",
-  "parsed": 441,
+  "parsed": 440,
   "published": 80,
   "successful": 80,
   "failed": 0,
@@ -8,7 +8,7 @@
   "sets": [
     {
       "set": "BP01",
-      "cards": 161,
+      "cards": 160,
       "groupId": 24842
     },
     {
