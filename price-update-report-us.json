@@ -1,14 +1,14 @@
 {
-  "date": "2026-11-25",
-  "parsed": 446,
+  "date": "2026-11-26",
+  "parsed": 447,
   "published": 80,
   "successful": 80,
   "failed": 0,
-  "priceUpdatedAt": "2026-11-25",
+  "priceUpdatedAt": "2026-11-26",
   "sets": [
     {
       "set": "BP01",
-      "cards": 160,
+      "cards": 161,
       "groupId": 24842
     },
     {
