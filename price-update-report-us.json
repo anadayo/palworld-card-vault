@@ -1,10 +1,10 @@
 {
-  "date": "2026-11-27",
-  "parsed": 447,
+  "date": "2026-11-28",
+  "parsed": 448,
   "published": 80,
   "successful": 80,
   "failed": 0,
-  "priceUpdatedAt": "2026-11-27",
+  "priceUpdatedAt": "2026-11-28",
   "sets": [
     {
       "set": "BP01",
@@ -28,7 +28,7 @@
     },
     {
       "set": "PROMO",
-      "cards": 44,
+      "cards": 45,
       "groupId": 24851
     },
     {
